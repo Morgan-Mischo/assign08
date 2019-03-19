@@ -9,9 +9,9 @@ public class BinaryNode<T> {
 
 	private T element;
 
-	private BinaryNode<T> left; // NOTICE the recursion
+	public BinaryNode<T> left; // NOTICE the recursion
 
-	private BinaryNode<T> right;
+	public BinaryNode<T> right;
 
 	/**
 	 * Creates a binary node with left and right nodes as children.

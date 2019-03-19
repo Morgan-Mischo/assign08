@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 class BinarySearchTreeTests {
 
 	private BinarySearchTree<String> sTree = new BinarySearchTree<String>();
+	private BinarySearchTree<Integer> iTree = new BinarySearchTree<Integer>();
 //	
 //	    iList1 = new ArrayList<>(); 
 //		iList2 = new ArrayList<>(); 
@@ -39,8 +40,37 @@ class BinarySearchTreeTests {
 	@Test
 	void empty()
 	{
-		assertTrue(sTree.isEmpty());
+//		assertTrue(sTree.isEmpty());
 		sTree.add("Cat");
 		assertFalse(sTree.isEmpty());
 	}
+	
+	@Test
+	void inOrder()
+	{
+//		iTree.add(5);
+//		iTree.add(3);
+//		iTree.add(6);
+//		iTree.add(1);
+//		for(int i = 4; i < 52; i+=3)
+//		{
+//			iTree.add(i);
+//		}
+//		iTree.toArrayList();
 	}
+	
+	@Test
+	void string()
+	{
+		iTree.add(5);
+		iTree.add(3);
+		iTree.add(6);
+		iTree.add(1);
+		for(int i = 4; i < 20; i+=3)
+		{
+			iTree.add(i);
+		}
+		String result = iTree.toString();
+		System.out.println(result);
+	}
+}

@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 public class BinarySearchTree<Type extends Comparable<? super Type>> implements SortedSet<Type> {
 	
@@ -16,9 +18,9 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	public BinaryNode<Type> left; 
 	
 	//right child
-	public BinaryNode<Type> right; 
+	public BinaryNode<Type> right;
 	
-	
+	private int size = 0;
 
 	@Override
 	public boolean add(Type item) {
@@ -28,40 +30,43 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		if (root == null)
 		{
 			root = newNode; 
+			size++;
 			return true; 
 		}
 		
 		else 
 		{
 			BinaryNode<Type> center = root;
-			
 			BinaryNode<Type> parent;
 			
 			while(true)
 			{
 				
 				parent = center;
-				BinaryNode<Type> parentLeft = parent.left();
-				BinaryNode<Type> parentRight = parent.right();
+//				
+//				BinaryNode<Type> parentLeft = parent.left();
+//				BinaryNode<Type> parentRight = parent.right();
 				
 				if(item.compareTo(center.element()) < 0)
 				{
-					center = center.left();
+					center = center.left;
 					
 					if(center == null)
 					{
-						parentLeft = newNode;
+						parent.left = newNode;
+						size++;
 						return true;
 					}
 				}
 				
 				else if(item.compareTo(center.element()) > 0)
 				{
-					center = center.right();
+					center = center.right;
 					
 					if(center == null)
 					{
-						parentRight = newNode;
+						parent.right = newNode;
+						size++;
 						return true;
 					}
 				}
@@ -93,6 +98,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	@Override
 	public void clear() {
 		root = null;
+		size = 0;
 	}
 
 	@Override
@@ -187,14 +193,110 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	@Override
 	public ArrayList<Type> toArrayList() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Type> storage = new ArrayList<Type>();
+		if(!isEmpty())
+		{
+			inOrderSearch(root, storage);
+		}
+		for(int i = 0; i < storage.size(); i++)
+		{
+		System.out.println(storage.get(i));
+		}
+		return storage;
 	}
 
+	private void inOrderSearch(BinaryNode<Type> focus, ArrayList<Type> storage) {
+
+		if (focus == null)
+			return;
+		
+		inOrderSearch(focus.left(), storage);
+		
+		storage.add(focus.element());
+		
+		inOrderSearch(focus.right(), storage);
+		
+//		//leaves
+//		if(focus.left() == null && focus.right() == null)
+//		{
+//			storage.add(focus.element());
+//			focus.setVisited(true);
+//			return;
+//		}
+//		
+//		if(!focus.left().hasBeenVisited())
+//		{	
+//			focus = focus.left();
+//			inOrderSearch(focus, storage);
+//		}
+//		
+//		if(focus.left().hasBeenVisited())
+//		{
+//			storage.add(focus.element());
+//			focus.setVisited(true);
+//			focus = focus.right();
+//			inOrderSearch(focus, storage);
+	}
+	
+	/**
+	 * Returns the BST represented as a String. Each line represents each level of the tree, two values
+	 * in each line are children to a value in the above line. Null/No children is represented as "-"
+	 */
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		int remainingNodes = size; //The amounts of Nodes in the tree that need to be added
+		int level = 0; //The current level in Level-Order Traversal. Start at level 0 (root)
+		int nodesInLevel = 0; //The current amount of nodes in the level while traversing
+		int levelCapacity = 1; //Maximum amount of nodes per level. Value is 2^n, where n is the current level. Start at 2^0 = 1
+		Queue<BinaryNode<Type>> q = new LinkedList<BinaryNode<Type>>();
+		q.offer(root);
+		
+		//Build the string while there are still non-null Nodes to be added
+		//in a Level-Order Traversal of the BST.
+		while (remainingNodes != 0) {
+			
+			//If the current level reaches maximum capacity, update some variables, and start a new line representing a new level.
+			if (nodesInLevel == levelCapacity) {
+				result.append("\n"); 
+				level++; 
+				nodesInLevel = 0;
+				levelCapacity = (int) Math.pow(2, level);
+			}
+			
+			
+			BinaryNode<Type> current = q.poll();
+		
+			//Represent null nodes as "-"
+			if (current == null) {
+				result.append("- ");
+				//To keep structure order, add the null node's children to the queue, which is null.
+				q.offer(null);
+				q.offer(null);
+			}
+			else { //If the node is not null, add its data to the string, then add its children to the queue
+				result.append(current.element().toString() + " ");
+				q.offer(current.left);
+				q.offer(current.right);
+				remainingNodes--; //Since a non-null node was added to the string, there is one less remaining node.
+			}
+			
+			//A node was added to the string, increase the counter that represents the amount of nodes in the current level
+			nodesInLevel++;
+			
+		}
+		
+		//When all of the non-null nodes have been added to the string, fill the remaining slots of the current level with
+		//null nodes.
+		while (nodesInLevel < levelCapacity) {
+			result.append("- ");
+			nodesInLevel++;
+		}
+		
+		return result.toString();
+	}
 }
