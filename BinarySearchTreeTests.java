@@ -62,15 +62,15 @@ class BinarySearchTreeTests {
 	@Test
 	void string()
 	{
-		iTree.add(5);
-		iTree.add(3);
-		iTree.add(6);
-		iTree.add(1);
-		for(int i = 4; i < 20; i+=3)
-		{
-			iTree.add(i);
-		}
-		String result = iTree.toString();
-		System.out.println(result);
+//		iTree.add(5);
+//		iTree.add(3);
+//		iTree.add(6);
+//		iTree.add(1);
+//		for(int i = 4; i < 20; i+=3)
+//		{
+//			iTree.add(i);
+//		}
+//		String result = iTree.toString();
+//		System.out.println(result);
 	}
 }

@@ -221,26 +221,6 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		
 		inOrderSearch(focus.right(), storage);
 		
-//		//leaves
-//		if(focus.left() == null && focus.right() == null)
-//		{
-//			storage.add(focus.element());
-//			focus.setVisited(true);
-//			return;
-//		}
-//		
-//		if(!focus.left().hasBeenVisited())
-//		{	
-//			focus = focus.left();
-//			inOrderSearch(focus, storage);
-//		}
-//		
-//		if(focus.left().hasBeenVisited())
-//		{
-//			storage.add(focus.element());
-//			focus.setVisited(true);
-//			focus = focus.right();
-//			inOrderSearch(focus, storage);
 	}
 	
 	/**
