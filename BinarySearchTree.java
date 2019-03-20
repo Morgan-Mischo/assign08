@@ -20,6 +20,9 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	//right child
 	public BinaryNode<Type> right;
 	
+	//remove boolean
+	public boolean remove; 
+	
 	private int size = 0;
 
 	@Override
@@ -176,13 +179,60 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 
 	@Override
 	public boolean remove(Type item) {
-		if(contains(item))
+		root = delete(root, item); 
+		
+		return remove; 
+	}
+	
+		/*
+		 * Helper method for remove
+		 */
+	public BinaryNode delete(BinaryNode root, Type item)
+	{
+		//Base case
+		if (root == null)
 		{
-			//To remove, must find position of item. It's parent now becomes children's parent 
-			return true;
+			remove = false; 
+			return root; 
 		}
+		
+		//Otherwise, recur down the tree
+		if(item.compareTo((Type) root.element()) < 0)
+		{
+			remove = true; 
+			root.left = delete(root.left(), item); 
+		}
+		else if (item.compareTo((Type) root.element()) > 0)
+		{
+			remove = true; 
+			root.right = delete(root.right(), item); 
+		}
+		
+		//if the key is the same as root's key then we delete this node
+		
 		else 
-			return false;
+		{
+			//node with one child or no children
+			{
+				if (root.left == null)
+				{
+					remove = true; 
+					return root.right; 
+				}
+				else if (root.right == null)
+				{
+					remove = true; 
+					return root.left; 
+				}
+				
+				//If the node has two children, we have to get the smallest in the right subtree
+				root.element() = minValue(root.right); 
+				
+				//Delete it
+				root.right = delete(root.right, item); 
+				
+			}
+		}
 	}
 
 	@Override
