@@ -18,6 +18,7 @@ class BinarySearchTreeTests {
 	private BinarySearchTree<String> sTree = new BinarySearchTree<String>();
 	private BinarySearchTree<Integer> iTree = new BinarySearchTree<Integer>();
 	private ArrayList<Integer> iItems = new ArrayList<Integer>();
+	private BinarySearchTree<Integer> iTree2 = new BinarySearchTree<Integer>();
 
 	@BeforeEach
 	void setUp() throws Exception
@@ -33,6 +34,11 @@ class BinarySearchTreeTests {
 		iItems.add(15);
 		iItems.add(8);
 		iItems.add(6);
+		
+		iTree2.add(7);
+		iTree2.add(15);
+		iTree2.add(8);
+		iTree2.add(6);
 	}
 	
 	@AfterEach
@@ -131,5 +137,22 @@ class BinarySearchTreeTests {
 //		}
 //		String result = iTree.toString();
 //		System.out.println(result);
+	}
+	
+	@Test
+	void remove ()
+	{
+		assertTrue(iTree.remove(8)); 
+		assertFalse(iTree.contains(8));
+		assertTrue(iTree.root.element() == 12); 
+		assertTrue(iTree.remove(iTree.root.element()));
+		assertFalse(iTree.contains(12)); 
+	}
+	
+	@Test
+	void removeAll()
+	{
+		assertTrue(iTree.removeAll(iItems)); 
+		assertFalse(iTree.removeAll(iItems)); 
 	}
 }
