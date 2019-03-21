@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+/**
+ * A class that creates a BinarySearchTree and performs different methods on it. Implements SortedSet
+ * @author Morgan Mischo and Casey Rand
+ */
+
 public class BinarySearchTree<Type extends Comparable<? super Type>> implements SortedSet<Type> {
 	
 	//root to work with
@@ -23,13 +28,23 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	//remove boolean
 	public boolean remove; 
 	
+	//size of the tree
 	private int size = 0;
+	
+	//parent
+//	public BinaryNode<Type> parent; 
+	
 
+	/**
+	 * Adding a singular Type onto the BinarySearch tree
+	 */
 	@Override
 	public boolean add(Type item) {
 		
+		//The node containing type item
 		BinaryNode<Type> newNode = new BinaryNode<Type>(item);
 		
+		//If we don't have a root, make the newNode the root
 		if (root == null)
 		{
 			root = newNode; 
@@ -39,173 +54,231 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		
 		else 
 		{
+			//If we do have a root, rename it and iterate underneath it. 
 			BinaryNode<Type> center = root;
-			BinaryNode<Type> parent;
 			
 			while(true)
 			{
 				
-				parent = center;
-//				
-//				BinaryNode<Type> parentLeft = parent.left();
-//				BinaryNode<Type> parentRight = parent.right();
+				BinaryNode<Type> parent = center;
 				
+				//If our item is smaller than the element in our root, make it the left child
 				if(item.compareTo(center.element()) < 0)
 				{
 					center = center.left;
 					
 					if(center == null)
 					{
+						newNode.parent = parent; 
 						parent.left = newNode;
 						size++;
 						return true;
 					}
 				}
 				
+				//If our item is bigger than the element in our root, make it the right child
 				else if(item.compareTo(center.element()) > 0)
 				{
 					center = center.right;
 					
 					if(center == null)
 					{
+						newNode.parent = parent; 
 						parent.right = newNode;
 						size++;
 						return true;
 					}
 				}
 				
+				//If we can't add, return false
 				else
+				{
 					return false;
+				}
 			}
 		}
 	}
 
+	
+	/**
+	 * Method for adding a collection of type into our BinarySeachTree
+	 */
 	@Override
 	public boolean addAll(Collection<? extends Type> items) {
 		
+		//Making our items into an ArrayList
 		List<Type> myList = new ArrayList<Type>();
 		myList.addAll(items);
 		
+		//Booleans to use within the method
 		boolean branch = false;
 		boolean changed = false;
 		
+		//For loop adding into our BinarySearch Tree
 		for(int i = 0; i < myList.size(); i++)
 		{
 			branch = add(myList.get(i));
 			if (branch)
 				changed = true;
 		}
+		
+		//If our for loop changed our BinarySearchTree, return true
 		return changed;
 	}
 
+	/**
+	 * Method for clearing the entire BinarySearchTree
+	 */
 	@Override
 	public void clear() {
 		root = null;
 		size = 0;
 	}
 
+	/**
+	 * Method for seeing if our BinarySearchTree has an item we are looking for
+	 */
 	@Override
 	public boolean contains(Type item) {
+		
+		//New BinaryNode so we can look at our root without altering it
 		BinaryNode<Type> center = root;
 		
+		//While loop to go through the BinarySearchTree
 		while(center != null)
 		{
+			//If our item is smaller than our root, we assign it to the left
 			if(item.compareTo(center.element()) < 0)
 			{
 				center = center.left();
 			}
 			
+			//If our item is larger than our root, we assign it to the right
 			else if(item.compareTo(center.element()) > 0)
 			{
 				center = center.right();
 			}
 			
 			else
+				//Return true if there is an element equal to the input item
+			{
 				return true;
+			}
 		}
+		//Return false if there isn't an element equal to the input item
 		return false;
 	}
 
+	/**
+	 * Boolean that returns true if our BinarySearchTree contains the input collection of items
+	 */
 	@Override
 	public boolean containsAll(Collection<? extends Type> items) {
 		
+		//New arrayList to hold our collection of items
 		List<Type> myList = new ArrayList<Type>();
 		myList.addAll(items);
 
+		//For loop to check if each node has the corresponding item
 		for(int i = 0; i < myList.size(); i++)
 		{
+			//If it doesn't contain the item, return false
 			if(!contains(myList.get(i)))
+			{
 				return false;
+			}
 		}
+		//Otherwise, return true
 		return true;
 	}
-
+	
+	/**
+	 * Returns the smallest item in the set
+	 */
 	@Override
 	public Type first() throws NoSuchElementException {
 		
+		//If our tree is empty, throw a NoSuchElementException
 		if(isEmpty())
+		{
 			throw new NoSuchElementException();
+		}
 		
+		//Set a binary node equal to the root for easy access
 		BinaryNode<Type> center = root;
 		
+		//While we have a left child, set it equal 
 		while(center.left() != null)
 		{
 			center = center.left();
 		}
 		
+		//Return our smallest element
 		return center.element();
 	}
 
+	/**
+	 * Boolean that returns true if our set is empty
+	 */
 	@Override
 	public boolean isEmpty() {
-		return root.equals(null);
+		return size == 0; 
 	}
 
+	/**
+	 * Method that returns the largest element in the set
+	 */
 	@Override
 	public Type last() throws NoSuchElementException {
 		
+		//If the set is empty, throw an exception
 		if(isEmpty())
+		{
 			throw new NoSuchElementException();
+		}
 		
+		//Set a new node equal to our root for easy access
 		BinaryNode<Type> center = root;
 		
+		//While we have a right child, set our new node equal to the right child
 		while(center.right() != null)
 		{
 			center = center.right();
 		}
 		
+		//Return the furthest right child (the largest element)
 		return center.element();
 	}
-
+	
+	/**
+	 * Boolean that tells us whether or not we were able to remove something
+	 */
 	@Override
 	public boolean remove(Type item) {
-		root = delete(root, item); 
 		
-		return remove; 
+		//return our helper method
+		return delete(root, item); 
 	}
 	
-		/*
-		 * Helper method for remove
-		 */
-	public BinaryNode delete(BinaryNode root, Type item)
-	{
+	/**
+	 * Helper method for remove
+	 */
+	public boolean delete(BinaryNode<Type> root, Type item)
+	{ 
 		//Base case
 		if (root == null)
 		{
-			remove = false; 
-			return root; 
+			return false;  
 		}
 		
 		//Otherwise, recur down the tree
 		if(item.compareTo((Type) root.element()) < 0)
-		{
-			remove = true; 
-			root.left = delete(root.left(), item); 
+		{ 
+			delete(root.left(), item); 
 		}
 		else if (item.compareTo((Type) root.element()) > 0)
 		{
-			remove = true; 
-			root.right = delete(root.right(), item); 
+			delete(root.right(), item); 
 		}
 		
 		//if the key is the same as root's key then we delete this node
@@ -216,36 +289,65 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			{
 				if (root.left == null)
 				{
-					remove = true; 
-					return root.right; 
+					root = root.right; 
+					return true; 
 				}
 				else if (root.right == null)
 				{
-					remove = true; 
-					return root.left; 
+					root = root.left; 
+					return true; 
 				}
 				
-				//If the node has two children, we have to get the smallest in the right subtree
-				root.element() = minValue(root.right); 
+				//If the node has two children, we have to get the smallest in the right subtree	
+				BinaryNode<Type> rightSide = root.right();
 				
-				//Delete it
-				root.right = delete(root.right, item); 
+				while(rightSide.left() != null)
+				{
+					rightSide = rightSide.left(); 
+				}
+				
+				root.resetElement(rightSide.element()); 
+				rightSide = rightSide.parent; 
+				rightSide.setLeft();
+				
+
+				return true; 
 				
 			}
 		}
+		return false; 
 	}
 
+	/**
+	 * Return true if we are able to remove everything in a collection
+	 */
 	@Override
 	public boolean removeAll(Collection<? extends Type> items) {
-		// TODO Auto-generated method stub
-		return false;
+		ArrayList<Type> storage = new ArrayList<Type>();
+		storage.addAll(items); 
+		
+		boolean myBool = false; 
+		for(int i = 0; i < storage.size(); i++)
+		{
+			if (remove(storage.get(i)) == true)
+			{
+				myBool = true; 
+			}
+		}
+		return myBool; 
 	}
 
+	/**
+	 * Returns the size of our set
+	 */
 	@Override
 	public int size() {
 		return size;
 	}
 
+	/**
+	 * Converts the set to an ArrayList
+	 */
 	@Override
 	public ArrayList<Type> toArrayList() {
 		ArrayList<Type> storage = new ArrayList<Type>();
@@ -253,13 +355,12 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		{
 			inOrderSearch(root, storage);
 		}
-		for(int i = 0; i < storage.size(); i++)
-		{
-		System.out.println(storage.get(i));
-		}
 		return storage;
 	}
 
+	/**
+	 * Method that performs an inOrderSearch starting at binaryNode Focus on an arrayList of storage
+	 */
 	private void inOrderSearch(BinaryNode<Type> focus, ArrayList<Type> storage) {
 
 		if (focus == null)
@@ -272,6 +373,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		inOrderSearch(focus.right(), storage);
 		
 	}
+	
 	
 	/**
 	 * Returns the BST represented as a String. Each line represents each level of the tree, two values
