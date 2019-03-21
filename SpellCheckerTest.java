@@ -17,25 +17,36 @@ class SpellCheckerTest {
 	@BeforeEach
 	void setUp() throws Exception
 	{
-		smallDic.add("Bubble");
-		smallDic.add("Crunch");
+		smallDic.add("bubble");
+		smallDic.add("crunch");
 		smallDic.add("wrapper");
 	}
 	
 	@Test
-	void testAddToDictionary() {
+	void inDictionary() 
+	{
 		SpellChecker smallSC = new SpellChecker(smallDic);
 		assertTrue(smallSC.inDictionary("Bubble"));
+	}
+	
+	@Test
+	void addToDictionary() 
+	{
+		mySC.addToDictionary("ferror");
+		assertTrue(mySC.inDictionary("ferror"));
+	}
+	
+	@Test
+	void capitalization()
+	{
+		assertTrue(mySC.inDictionary("ball"));
+		assertTrue(mySC.inDictionary("Ball"));
 	}
 
 	@Test
 	void testRemoveFromDictionary() {
-		fail("Not yet implemented");
+		mySC.addToDictionary("fowster");
+		mySC.removeFromDictionary("fowster");
+		assertFalse(mySC.inDictionary("fowster"));
 	}
-
-	@Test
-	void testSpellCheck() {
-		fail("Not yet implemented");
-	}
-
 }

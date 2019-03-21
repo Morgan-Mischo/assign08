@@ -70,7 +70,8 @@ public class SpellChecker {
 	 */
 	public boolean inDictionary(String word)
 	{
-		return true;
+		String changedWord = word.toLowerCase();
+		return dictionary.contains(changedWord);
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class SpellChecker {
 
 		for(int i = 0; i < wordsToCheck.size(); i++)
 		{
-			if(!dictionary.contains(wordsToCheck.get(i)))
+			if(!inDictionary(wordsToCheck.get(i)))
 			{
 				result.add(wordsToCheck.get(i));
 			}
