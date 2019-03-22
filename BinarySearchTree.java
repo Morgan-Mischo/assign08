@@ -257,7 +257,12 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	public boolean remove(Type item) {
 		
 		//return our helper method
-		return delete(root, item); 
+		if (delete(root, item) == true)
+		{
+			size--;
+			return true; 
+		}
+		return false; 
 	}
 	
 	/**
@@ -274,29 +279,57 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		//Otherwise, recur down the tree
 		if(item.compareTo((Type) root.element()) < 0)
 		{ 
-			delete(root.left(), item); 
+			return delete(root.left(), item); 
 		}
 		else if (item.compareTo((Type) root.element()) > 0)
 		{
-			delete(root.right(), item); 
+			return delete(root.right(), item); 
 		}
 		
 		//if the key is the same as root's key then we delete this node
 		
-		else 
+		else
 		{
 			//node with one child or no children
 			{
-				if (root.left == null)
+				if (root.left == null && root.right == null)
 				{
-					root = root.right; 
+					if(root.parent.left == root)
+					{
+						root.parent.setLeft(null);
+					}
+					else if(root.parent.right == root)
+					{
+						root.parent.setRight(null);
+					}
+					return true;
+				}
+			else if (root.left == null)
+				{
+					if (root.parent.right == root)
+					{
+						root.parent.setRight(root.right);
+					}
+					
+					else if (root.parent.left == root)
+					{
+						root.parent.setLeft(root.right);
+					}
 					return true; 
 				}
 				else if (root.right == null)
 				{
-					root = root.left; 
+					if(root.parent.right == root)
+					{
+						root.parent.setRight(root.left);
+					}
+					else if (root.parent.left == root)
+					{
+						root.parent.setLeft(root.left);
+					}
 					return true; 
 				}
+				else {
 				
 				//If the node has two children, we have to get the smallest in the right subtree	
 				BinaryNode<Type> rightSide = root.right();
@@ -307,15 +340,20 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 				}
 				
 				root.resetElement(rightSide.element()); 
-				rightSide = rightSide.parent; 
-				rightSide.setLeft();
-				
-
+				rightSide = rightSide.parent;
+				if (rightSide == root)
+				{
+					rightSide.setRight(null);
+				}
+				else 
+				{
+					rightSide.setLeft(null);
+				}
 				return true; 
+				}
 				
 			}
 		}
-		return false; 
 	}
 
 	/**
