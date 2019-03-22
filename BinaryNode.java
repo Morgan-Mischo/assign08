@@ -1,3 +1,4 @@
+
 package assign08;
 
 import java.io.IOException;
@@ -5,13 +6,21 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * A class that creates a BinaryNode of Type that we can use within our BinarySearchTree
+ * @author goram, Casey Rand, and Morgan Mischo
+ *
+ * @param <T>
+ */
 public class BinaryNode<T> {
 
 	private T element;
 
-	public BinaryNode<T> left; // NOTICE the recursion
+	private BinaryNode<T> left;
 
-	public BinaryNode<T> right;
+	private BinaryNode<T> right;
+	
+	private BinaryNode<T> parent; 
 
 	/**
 	 * Creates a binary node with left and right nodes as children.
@@ -64,7 +73,43 @@ public class BinaryNode<T> {
 	public BinaryNode<T> right() {
 		return right;
 	}
+	
+	/**
+	 * return the parent of this node
+	 */
+	public BinaryNode<T> parent() {
+		return parent; 
+	}
 
+	/** 
+	 * Set left child
+	 */
+	public void setLeft(BinaryNode<T> a) {
+		left = a; 
+		left.parent = this;
+	}
+	
+	/**
+	 * Set left to null
+	 */
+	public void setLeftNull() {
+		left = null;
+	}
+	
+	/**
+	 * Set right to null
+	 */
+	public void setRightNull() {
+		right = null;
+	}
+	/**
+	 * Set right child
+	 */
+	public void setRight(BinaryNode<T> a)
+	{
+		right = a;
+		right.parent = this;
+	}
 	/**
 	 * @return number of nodes in the tree rooted at "this" node
 	 * 

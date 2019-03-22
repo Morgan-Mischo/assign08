@@ -1,7 +1,5 @@
 package assign08;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -15,35 +13,22 @@ import java.util.Queue;
  */
 
 public class BinarySearchTree<Type extends Comparable<? super Type>> implements SortedSet<Type> {
-	
+
 	//root to work with
-	public BinaryNode<Type> root = null; 
-	
-	//left child
-	public BinaryNode<Type> left; 
-	
-	//right child
-	public BinaryNode<Type> right;
-	
-	//remove boolean
-	public boolean remove; 
+	private BinaryNode<Type> root = null; 
 	
 	//size of the tree
-	private int size = 0;
-	
-	//parent
-//	public BinaryNode<Type> parent; 
-	
+	private int size; 
 
 	/**
 	 * Adding a singular Type onto the BinarySearch tree
 	 */
 	@Override
 	public boolean add(Type item) {
-		
+
 		//The node containing type item
 		BinaryNode<Type> newNode = new BinaryNode<Type>(item);
-		
+
 		//If we don't have a root, make the newNode the root
 		if (root == null)
 		{
@@ -51,77 +36,65 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			size++;
 			return true; 
 		}
-		
+
 		else 
 		{
 			//If we do have a root, rename it and iterate underneath it. 
 			BinaryNode<Type> center = root;
-			
+			BinaryNode<Type> parent;
+
 			while(true)
 			{
-				
-				BinaryNode<Type> parent = center;
-				
 				//If our item is smaller than the element in our root, make it the left child
 				if(item.compareTo(center.element()) < 0)
 				{
-					center = center.left;
-					
+					parent = center;
+					center = center.left();
+
 					if(center == null)
 					{
-						newNode.parent = parent; 
-						parent.left = newNode;
+						parent.setLeft(newNode);
 						size++;
 						return true;
 					}
 				}
-				
+
 				//If our item is bigger than the element in our root, make it the right child
 				else if(item.compareTo(center.element()) > 0)
 				{
-					center = center.right;
-					
+					parent = center;
+					center = center.right();
+
 					if(center == null)
 					{
-						newNode.parent = parent; 
-						parent.right = newNode;
+						parent.setRight(newNode);
 						size++;
 						return true;
 					}
-				}
-				
-				//If we can't add, return false
-				else
-				{
-					return false;
 				}
 			}
 		}
 	}
 
-	
+
 	/**
 	 * Method for adding a collection of type into our BinarySeachTree
 	 */
 	@Override
 	public boolean addAll(Collection<? extends Type> items) {
-		
-		//Making our items into an ArrayList
-		List<Type> myList = new ArrayList<Type>();
-		myList.addAll(items);
-		
+
 		//Booleans to use within the method
 		boolean branch = false;
 		boolean changed = false;
-		
+
 		//For loop adding into our BinarySearch Tree
-		for(int i = 0; i < myList.size(); i++)
+		for(Type e: items)
 		{
-			branch = add(myList.get(i));
+			branch = add(e);
 			if (branch)
 				changed = true;
 		}
-		
+
 		//If our for loop changed our BinarySearchTree, return true
 		return changed;
 	}
@@ -140,10 +113,10 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean contains(Type item) {
-		
+
 		//New BinaryNode so we can look at our root without altering it
 		BinaryNode<Type> center = root;
-		
+
 		//While loop to go through the BinarySearchTree
 		while(center != null)
 		{
@@ -152,13 +125,13 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			{
 				center = center.left();
 			}
-			
+
 			//If our item is larger than our root, we assign it to the right
 			else if(item.compareTo(center.element()) > 0)
 			{
 				center = center.right();
 			}
-			
+
 			else
 				//Return true if there is an element equal to the input item
 			{
@@ -174,7 +147,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean containsAll(Collection<? extends Type> items) {
-		
+
 		//New arrayList to hold our collection of items
 		List<Type> myList = new ArrayList<Type>();
 		myList.addAll(items);
@@ -191,28 +164,28 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		//Otherwise, return true
 		return true;
 	}
-	
+
 	/**
 	 * Returns the smallest item in the set
 	 */
 	@Override
 	public Type first() throws NoSuchElementException {
-		
+
 		//If our tree is empty, throw a NoSuchElementException
 		if(isEmpty())
 		{
 			throw new NoSuchElementException();
 		}
-		
+
 		//Set a binary node equal to the root for easy access
 		BinaryNode<Type> center = root;
-		
+
 		//While we have a left child, set it equal 
 		while(center.left() != null)
 		{
 			center = center.left();
 		}
-		
+
 		//Return our smallest element
 		return center.element();
 	}
@@ -230,32 +203,32 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public Type last() throws NoSuchElementException {
-		
+
 		//If the set is empty, throw an exception
 		if(isEmpty())
 		{
 			throw new NoSuchElementException();
 		}
-		
+
 		//Set a new node equal to our root for easy access
 		BinaryNode<Type> center = root;
-		
+
 		//While we have a right child, set our new node equal to the right child
 		while(center.right() != null)
 		{
 			center = center.right();
 		}
-		
+
 		//Return the furthest right child (the largest element)
 		return center.element();
 	}
-	
+
 	/**
 	 * Boolean that tells us whether or not we were able to remove something
 	 */
 	@Override
 	public boolean remove(Type item) {
-		
+
 		//return our helper method
 		if (delete(root, item) == true)
 		{
@@ -264,7 +237,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		}
 		return false; 
 	}
-	
+
 	/**
 	 * Helper method for remove
 	 */
@@ -275,7 +248,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		{
 			return false;  
 		}
-		
+
 		//Otherwise, recur down the tree
 		if(item.compareTo((Type) root.element()) < 0)
 		{ 
@@ -285,73 +258,76 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		{
 			return delete(root.right(), item); 
 		}
-		
+
 		//if the key is the same as root's key then we delete this node
-		
+
 		else
 		{
-			//node with one child or no children
 			{
-				if (root.left == null && root.right == null)
+				//node with no children
+				if (root.left() == null && root.right() == null)
 				{
-					if(root.parent.left == root)
+					if(root.parent().left() == root)
 					{
-						root.parent.setLeft(null);
+						root.parent().setLeftNull();
 					}
-					else if(root.parent.right == root)
+					else if(root.parent().right() == root)
 					{
-						root.parent.setRight(null);
+						root.parent().setRightNull();
 					}
 					return true;
 				}
-			else if (root.left == null)
+				//node with one child
+				else if (root.left() == null)
 				{
-					if (root.parent.right == root)
+					if (root.parent().left() == root)
 					{
-						root.parent.setRight(root.right);
+						root.parent().setLeft(root.right());
+					}
+
+					else if (root.parent().right() == root)
+					{
+						root.parent().setRight(root.right());
+					}
+					return true; 
+				}
+				else if (root.right() == null)
+				{
+					if (root.parent().left() == root)
+					{
+						root.parent().setLeft(root.left());
 					}
 					
-					else if (root.parent.left == root)
+					else if(root.parent().right() == root)
 					{
-						root.parent.setLeft(root.right);
+						root.parent().setRight(root.left());
 					}
 					return true; 
 				}
-				else if (root.right == null)
-				{
-					if(root.parent.right == root)
-					{
-						root.parent.setRight(root.left);
-					}
-					else if (root.parent.left == root)
-					{
-						root.parent.setLeft(root.left);
-					}
-					return true; 
-				}
-				else {
 				
-				//If the node has two children, we have to get the smallest in the right subtree	
-				BinaryNode<Type> rightSide = root.right();
-				
-				while(rightSide.left() != null)
-				{
-					rightSide = rightSide.left(); 
-				}
-				
-				root.resetElement(rightSide.element()); 
-				rightSide = rightSide.parent;
-				if (rightSide == root)
-				{
-					rightSide.setRight(null);
-				}
 				else 
 				{
-					rightSide.setLeft(null);
+
+					//If the node has two children, we have to get the smallest in the right subtree	
+					BinaryNode<Type> rightSide = root.right();
+
+					while(rightSide.left() != null)
+					{
+						rightSide = rightSide.left(); 
+					}
+
+					root.resetElement(rightSide.element());
+					if(rightSide == root.right())
+					{
+						root.setRightNull();
+					}
+
+					else
+					{
+						rightSide.parent().setLeftNull();
+					}
+					return true;
 				}
-				return true; 
-				}
-				
 			}
 		}
 	}
@@ -363,7 +339,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	public boolean removeAll(Collection<? extends Type> items) {
 		ArrayList<Type> storage = new ArrayList<Type>();
 		storage.addAll(items); 
-		
+
 		boolean myBool = false; 
 		for(int i = 0; i < storage.size(); i++)
 		{
@@ -403,16 +379,16 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 
 		if (focus == null)
 			return;
-		
+
 		inOrderSearch(focus.left(), storage);
-		
+
 		storage.add(focus.element());
-		
+
 		inOrderSearch(focus.right(), storage);
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Returns the BST represented as a String. Each line represents each level of the tree, two values
 	 * in each line are children to a value in the above line. Null/No children is represented as "-"
@@ -425,11 +401,11 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		int levelCapacity = 1; //Maximum amount of nodes per level. Value is 2^n, where n is the current level. Start at 2^0 = 1
 		Queue<BinaryNode<Type>> q = new LinkedList<BinaryNode<Type>>();
 		q.offer(root);
-		
+
 		//Build the string while there are still non-null Nodes to be added
 		//in a Level-Order Traversal of the BST.
 		while (remainingNodes != 0) {
-			
+
 			//If the current level reaches maximum capacity, update some variables, and start a new line representing a new level.
 			if (nodesInLevel == levelCapacity) {
 				result.append("\n"); 
@@ -437,10 +413,10 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 				nodesInLevel = 0;
 				levelCapacity = (int) Math.pow(2, level);
 			}
-			
-			
+
+
 			BinaryNode<Type> current = q.poll();
-		
+
 			//Represent null nodes as "-"
 			if (current == null) {
 				result.append("- ");
@@ -450,23 +426,23 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			}
 			else { //If the node is not null, add its data to the string, then add its children to the queue
 				result.append(current.element().toString() + " ");
-				q.offer(current.left);
-				q.offer(current.right);
+				q.offer(current.left());
+				q.offer(current.right());
 				remainingNodes--; //Since a non-null node was added to the string, there is one less remaining node.
 			}
-			
+
 			//A node was added to the string, increase the counter that represents the amount of nodes in the current level
 			nodesInLevel++;
-			
+
 		}
-		
+
 		//When all of the non-null nodes have been added to the string, fill the remaining slots of the current level with
 		//null nodes.
 		while (nodesInLevel < levelCapacity) {
 			result.append("- ");
 			nodesInLevel++;
 		}
-		
+
 		return result.toString();
 	}
 }

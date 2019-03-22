@@ -2,12 +2,8 @@ package assign08;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,6 +77,19 @@ class BinarySearchTreeTests {
 	}
 	
 	@Test
+	void addAll10()
+	{
+		BinarySearchTree<Integer> test = new BinarySearchTree<Integer>();
+		List<Integer> myList = new ArrayList<Integer>();
+		for(int i = 0; i < 500; i++)
+		{
+			myList.add(i);
+		}
+		test.addAll(myList);
+		assertEquals(500, test.size());
+	}
+	
+	@Test
 	void inOrder()
 	{
 //		iTree.toArrayList();
@@ -119,9 +128,9 @@ class BinarySearchTreeTests {
 	@Test
 	void remove_Root()
 	{
-//		iItems.remove(8);
+		iTree.remove(8);
 //		System.out.println(iTree);
-//		assertFalse(iTree.contains(8));
+		assertFalse(iTree.contains(8));
 		
 	}
 	@Test
@@ -140,13 +149,19 @@ class BinarySearchTreeTests {
 	}
 	
 	@Test
-	void remove ()
+	void remove()
 	{
 		assertTrue(iTree.remove(8)); 
 		assertFalse(iTree.contains(8));
-		assertTrue(iTree.root.element() == 12); 
-		assertTrue(iTree.remove(iTree.root.element()));
+		iTree.remove(12);
 		assertFalse(iTree.contains(12)); 
+	}
+	
+	@Test
+	void remove_Leaf()
+	{
+		iTree2.remove(6);
+		assertFalse(iTree2.contains(6));
 	}
 	
 	@Test

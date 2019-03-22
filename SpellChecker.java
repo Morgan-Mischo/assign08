@@ -51,7 +51,8 @@ public class SpellChecker {
 	 * @param word - the String to be added to the dictionary
 	 */
 	public void addToDictionary(String word) {
-		dictionary.add(word);
+		String newWord = word.toLowerCase();
+		dictionary.add(newWord);
 	}
 
 	/**
@@ -60,7 +61,8 @@ public class SpellChecker {
 	 * @param word - the String to be removed from the dictionary
 	 */
 	public void removeFromDictionary(String word) {
-		dictionary.remove(word);
+		String newWord = word.toLowerCase();
+		dictionary.remove(newWord);
 	}
 	
 	/**
@@ -89,7 +91,8 @@ public class SpellChecker {
 
 		for(int i = 0; i < wordsToCheck.size(); i++)
 		{
-			if(!inDictionary(wordsToCheck.get(i)))
+			String newWord = wordsToCheck.get(i).toLowerCase();
+			if(!inDictionary(newWord) && !result.contains(newWord))
 			{
 				result.add(wordsToCheck.get(i));
 			}
@@ -104,7 +107,13 @@ public class SpellChecker {
 	 * @param words - the List of Strings to be added to the dictionary
 	 */
 	private void buildDictionary(List<String> words) {
-		dictionary.addAll(words);
+		List<String> lowerCase = new ArrayList<String>();
+		for(int i = 0; i < words.size(); i++)
+		{
+			String newWord = words.get(i).toLowerCase();
+			lowerCase.add(newWord);
+		}
+		dictionary.addAll(lowerCase);
 	}
 
 	/**

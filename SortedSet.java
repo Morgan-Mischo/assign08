@@ -68,6 +68,7 @@ public interface SortedSet<Type extends Comparable<? super Type>> {
 	public Type first() throws NoSuchElementException;
 
 	/**
+	 * 
 	 * Returns true if this set contains no items.
 	 */
 	public boolean isEmpty();

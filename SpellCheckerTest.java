@@ -17,9 +17,9 @@ class SpellCheckerTest {
 	@BeforeEach
 	void setUp() throws Exception
 	{
-		smallDic.add("bubble");
-		smallDic.add("crunch");
-		smallDic.add("wrapper");
+		smallDic.add("BuBBle");
+		smallDic.add("crUnch");
+		smallDic.add("wraPPer");
 	}
 	
 	@Test
@@ -45,8 +45,18 @@ class SpellCheckerTest {
 
 	@Test
 	void testRemoveFromDictionary() {
-		mySC.addToDictionary("fowster");
-		mySC.removeFromDictionary("fowster");
-		assertFalse(mySC.inDictionary("fowster"));
+		mySC.addToDictionary("FOwster");
+		mySC.removeFromDictionary("Fowster");
+		assertFalse(mySC.inDictionary("FOwster"));
+	}
+	
+	@Test
+	void test_Remove() {
+		mySC.addToDictionary("warr");
+		assertTrue(mySC.inDictionary("Warr"));
+		mySC.removeFromDictionary("Quick");
+		assertFalse(mySC.inDictionary("quick"));
+		mySC.addToDictionary("QUICK");
+		assertTrue(mySC.inDictionary("quick"));
 	}
 }

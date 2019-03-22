@@ -1,6 +1,7 @@
 package assign08;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,11 +13,22 @@ import java.util.List;
 public class SpellCheckerDemo {
 
 	public static void main(String[] args) {
+		
+		List<String> sList = new ArrayList<String>();
+		sList.add("police");
+		sList.add("you");
+		sList.add("see");
+		sList.add("help");
 
 		SpellChecker mySC = new SpellChecker(new File("src/assign08/dictionary.txt"));
+		SpellChecker shortSC = new SpellChecker(sList);
 
 		runSpellCheck(mySC, "src/assign08/hello_world.txt");
+		runSpellCheck(mySC, "src/assign08/hello_world.txt");
 		runSpellCheck(mySC, "src/assign08/good_luck.txt");
+		runSpellCheck(shortSC, "src/assign08/test");
+		shortSC.removeFromDictionary("police");
+		runSpellCheck(shortSC, "src/assign08/test");
 	}
 
 	/**
