@@ -1,22 +1,20 @@
 package assign08;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class Timing {
 
 	public static <E> void main (String[] args) {
-		
+
 		final int problemSize = 20000;
 		final int TIMES_TO_LOOP = 1000;
-
-		Random rng = new Random();
 
 		List<Integer> iList1 = new ArrayList<>();
 		BinarySearchTree<Integer> myBST = new BinarySearchTree<Integer>();
 
-		for (int i = 5000; i < problemSize + 1; i+=5000)
+		for (int i = 1000; i < problemSize + 1; i+=1000)
 		{
 			myBST.clear();
 			long startTime, midpointTime, midpointTime2, stopTime = System.nanoTime();
@@ -28,26 +26,29 @@ public class Timing {
 				// empty block
 			}
 
+
+			int p = 0;
 			// Now, run the test.
 			startTime = System.nanoTime();
 
-			int p = 0;
 			while (p < 10)
 			{
 				iList1.clear();
-			for (int j = 0; j < i; j++)
-			{
-				iList1.add(rng.nextInt(i));
-			}
-			myBST.addAll(iList1);
-			for (int j = 0; j <= TIMES_TO_LOOP; j++)
-			{
-				for (int k = 0; k < i; k++)
+				myBST.clear();
+				for (int j = 0; j < i; j++)
 				{
-					myBST.contains(k);
+					iList1.add(j);
 				}
-			}
-			p++;
+				Collections.shuffle(iList1);
+				myBST.addAll(iList1);
+				for (int j = 0; j <= TIMES_TO_LOOP; j++)
+				{
+					for (int k = 0; k < i; k++)
+					{
+						myBST.contains(k);
+					}
+				}
+				p++;
 			}
 
 			midpointTime = System.nanoTime();
@@ -58,18 +59,20 @@ public class Timing {
 			while (p < 10)
 			{
 				iList1.clear();
-			for (int j = 0; j < i; j++)
-			{
-				iList1.add(rng.nextInt(i));
-			}
-			myBST.addAll(iList1);
-			for (int j = 0; j <= TIMES_TO_LOOP; j++)
-			{
-				for (int k = 0; k < i; k++)
+				myBST.clear();
+				for (int j = 0; j < i; j++)
 				{
+					iList1.add(j);
 				}
-			}
-			p++;
+				Collections.shuffle(iList1);
+				myBST.addAll(iList1);
+				for (int j = 0; j <= TIMES_TO_LOOP; j++)
+				{
+					for (int k = 0; k < i; k++)
+					{
+					}
+				}
+				p++;
 			}
 			stopTime = System.nanoTime();
 
@@ -77,10 +80,10 @@ public class Timing {
 			// from the cost of running the loop and doing the lookups.
 			// Average it over the number of runs.
 			double averageTime = (double) ((midpointTime - startTime) - (stopTime - midpointTime2))
-					/ TIMES_TO_LOOP;
+					/ (TIMES_TO_LOOP * p);
 			System.out.println(i + "\t" + averageTime);
 		}
-	
+
 
 	}
 
